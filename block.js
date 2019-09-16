@@ -53,7 +53,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
             type: 'string',
             default: 'none',
 		},
-		media: {
+		mediaSource: {
 			type: 'string',
 		},
 		toggleField: {
@@ -79,7 +79,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				mediaAlt, 
 				toggleField, 
 				selectSize,
-				media,
+				mediaSource,
 				newAlt,
 				sizes,
 			},
@@ -109,7 +109,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		};
 
 		const onChangeMedia = ( newValue ) => {
-			setAttributes( { media: newValue } );
+			setAttributes( { mediaSource: newValue } );
 		};
 
 		const onChangeToggleField = ( newValue ) => {
@@ -142,7 +142,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
                         />
 
 						<Toolbar>
-						{ [ 'test' ].map( ( edit ) => {
+						{ [ 'Edit Image' ].map( ( edit ) => {
 							return (
 							<IconButton
 								className={ classnames('components-icon-button components-toolbar__control', { 'is-active': clicked }) }
@@ -182,7 +182,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 						<TextControl
 							label="Media Atribute"
 							help="Enter the min-width em pixels."
-							value={ media }
+							value={ mediaSource }
 							onChange={ onChangeMedia }
 						/>
 
@@ -249,14 +249,14 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			attributes: {
 				mediaID,
 				mediaURL,
-				media,
+				mediaSource,
 				newAlt,
 				sizes,
 			},
 		} = props;
 		return (
 			<picture className={ className }>
-				<RichText.Content tagName="source" media={ `(min-width:${ media })` } type="image/webp" srcset={ mediaURL + `.webp` } sizes={ sizes } />
+				<RichText.Content tagName="source" media={ `(min-width:${ mediaSource })` } type="image/webp" srcset={ mediaURL + `.webp` } sizes={ sizes } />
 				
 				{
 					mediaURL && (
