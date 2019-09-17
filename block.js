@@ -1,5 +1,4 @@
 /* global wp */
-import classnames from 'classnames';
 const { __ } = wp.i18n;
 const {
 	registerBlockType,
@@ -49,12 +48,12 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			type: 'string',
 			selector: 'img',
 		},
+		mediaSource: {
+			type: 'string',
+		},
 		alignment: {
             type: 'string',
             default: 'none',
-		},
-		mediaSource: {
-			type: 'string',
 		},
 		toggleField: {
 			type: 'boolean',
@@ -94,13 +93,6 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			} );
 		};
 
-		const mediaPreview = ( !! mediaID && <img
-			alt={ __( 'Edit image' ) }
-			title={ __( 'Edit image' ) }
-			className={ 'edit-image-preview' }
-			src={ mediaID }	/> 
-		);
-
 		const editImageIcon = ( 
 			<SVG width={ 20 } height={ 20 } viewBox="0 0 20 20"><Rect x={ 11 } y={ 3 } width={ 7 } height={ 5 } rx={ 1 } /><Rect x={ 2 } y={ 12 } width={ 7 } height={ 5 } rx={ 1 } /><Path d="M13,12h1a3,3,0,0,1-3,3v2a5,5,0,0,0,5-5h1L15,9Z" /><Path d="M4,8H3l2,3L7,8H6A3,3,0,0,1,9,5V3A5,5,0,0,0,4,8Z" /></SVG> );
 
@@ -125,13 +117,11 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		};
 		
 		const [ toggled, setToggled ] = useState( sizes );
-		
-		const [ clicked, setClicked ] = useState( false );
 
 		useEffect(() => {
-			// Update the Atribute using the browser API
+			// Update the Atribute after new state using hooks instead of classes
 			setAttributes( { sizes: toggled } );
-		});
+		}, []);
 
 		return (
 			<div className={ className }>
@@ -140,20 +130,18 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
                             value={ alignment }
                             onChange={ onChangeAlignment }
                         />
-
+					{
+						mediaURL && (
 						<Toolbar>
-						{ [ 'Edit Image' ].map( ( edit ) => {
-							return (
 							<IconButton
-								className={ classnames('components-icon-button components-toolbar__control', { 'is-active': clicked }) }
+								className="components-icon-button components-toolbar__control"
 								label={ __( 'Edit image' ) }
-								aria-pressed={clicked === edit}
-								onClick={() => setClicked( clicked === edit ? null: edit )}
+								onClick={ onSelectImage }
 								icon={ editImageIcon }
 							/>
-							);
-									} ) }
 						</Toolbar>
+						)
+					}
 
                 </BlockControls>
 				
@@ -228,7 +216,6 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 								onSelect={ onSelectImage }
 								allowedTypes="image"
 								value={ mediaID }
-								mediaPreview={ mediaPreview }
 							/>
 						)
 					}{
