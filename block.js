@@ -52,8 +52,8 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			type: 'string',
 		},
 		alignment: {
-            type: 'string',
-            default: 'none',
+        	type: 'string',
+        	default: 'none',
 		},
 		toggleField: {
 			type: 'boolean',
@@ -126,10 +126,10 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		return (
 			<div className={ className }>
 				<BlockControls>
-                        <AlignmentToolbar
-                            value={ alignment }
-                            onChange={ onChangeAlignment }
-                        />
+                	<AlignmentToolbar
+                    	value={ alignment }
+                        onChange={ onChangeAlignment }
+                    />
 					{
 						mediaURL && (
 						<Toolbar>
