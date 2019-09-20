@@ -323,10 +323,27 @@
   
   
       useEffect(function () {
-        setAttributes({
-          sizes: size
-        }); // Starts after each new render. Here the variables determines when the function is called
-      }, [size]);
+        if (toggleField === true) {
+          setAttributes({
+            sizes: size
+          });
+        } // The Cleaning function is inside the hook
+        // Equivalent to ComponentDidUnmount in Classes
+  
+  
+        return function () {
+          if (toggleField === false) {
+            setAttributes({
+              sizes: undefined,
+              mediumThumb: undefined,
+              selectSize: undefined,
+              smallThumb: undefined,
+              mediaSource: undefined
+            });
+          } // Starts after each new render. Here the variables determines when the function is called
+  
+        };
+      }, [size, toggleField]);
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: className
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(BlockControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(AlignmentToolbar, {
@@ -369,17 +386,17 @@
         label: __('Original image size'),
         value: selectSize,
         options: [{
-          value: '100vw',
-          label: '1200px'
+          value: '1200w',
+          label: '1200w'
         }, {
-          value: '80vw',
-          label: '1024px'
+          value: '1024w',
+          label: '1024w'
         }, {
-          value: '50vw',
-          label: '800px'
+          value: '800w',
+          label: '800w'
         }, {
-          value: '25vw',
-          label: '600px'
+          value: '600w',
+          label: '600w'
         }],
         onChange: onChangeSize
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
@@ -455,7 +472,7 @@
         tagName: "source",
         media: "(min-width:".concat(mediaSource, ")"),
         type: "image/webp",
-        srcset: mediaURL + ".webp ".concat(selectSize, ",") + " " + mediaURL + "-small.webp ".concat(smallThumb, ",") + " " + mediaURL + "-medium.webp ".concat(mediumThumb),
+        srcset: mediaURL + ".webp ".concat(selectSize, ",") + '' + mediaURL + "-small.webp ".concat(smallThumb, ",") + '' + mediaURL + "-medium.webp ".concat(mediumThumb),
         sizes: sizes
       }), mediaURL && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
         className: mediaID ? "wp-image-".concat(mediaID, "-align-").concat(props.attributes.alignment) : null,

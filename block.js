@@ -133,12 +133,24 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 
 		// Update the Component after new state is set
 		// Equivalent to componentDidMount in Classes
-		useEffect(
-			() => {
-			setAttributes( { sizes: size } );
+		useEffect(() => {
+			if (toggleField === true) {
+				setAttributes( { sizes: size } );
+			}
 
+			// The Cleaning function is inside the hook
+			// Equivalent to ComponentDidUnmount in Classes
+			return () => {
+			if (toggleField === false) {
+				setAttributes( { 
+					sizes: undefined,
+					mediumThumb: undefined,
+					selectSize: undefined,
+					smallThumb: undefined,
+					mediaSource: undefined } );
+			}
 			// Starts after each new render. Here the variables determines when the function is called
-		}, [size]);
+		}}, [size, toggleField]);
 
 		return (
 			<div className={ className }>
@@ -206,10 +218,10 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 								value={ selectSize }
 								options={
 									[
-										{ value: '100vw', label: '1200px' },
-										{ value: '80vw', label: '1024px' },
-										{ value: '50vw', label: '800px' },
-										{ value: '25vw', label: '600px' },
+										{ value: '1200w', label: '1200w' },
+										{ value: '1024w', label: '1024w' },
+										{ value: '800w', label: '800w' },
+										{ value: '600w', label: '600w' },
 									]
 								}
 								onChange={ onChangeSize }
@@ -315,7 +327,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 							tagName="source" 
 							media={ `(min-width:${ mediaSource })` } 
 							type="image/webp" 
-							srcset={ mediaURL + `.webp ${ selectSize },` + ` ` + mediaURL + `-small.webp ${ smallThumb },` + ` ` + mediaURL + `-medium.webp ${ mediumThumb }` } 
+							srcset={ mediaURL + `.webp ${ selectSize },` + '' + mediaURL + `-small.webp ${ smallThumb },` + '' + mediaURL + `-medium.webp ${ mediumThumb }` } 
 							sizes={ sizes } 
 				/>
 					)
