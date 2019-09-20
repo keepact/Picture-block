@@ -66,6 +66,12 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		sizes: {
 			type: 'string',
 		},
+		smallThumb: {
+			type: 'string',
+		},
+		mediumThumb: {
+			type: 'string',
+		},
 	},
 	edit: ( props ) => {
 		const {
@@ -80,6 +86,8 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				mediaSource,
 				newAlt,
 				sizes,
+				smallThumb,
+				mediumThumb,
 			},
 			setAttributes,
 		} = props;
@@ -89,7 +97,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				mediaURL: media.url,
 				mediaID: media.id,
 				mediaAlt: media.alt,
-			} );
+			});
 		};
 
 		const onChangeAlignment = ( newAlignment ) => {
@@ -111,47 +119,59 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		const onChangenewAlt = ( newValue ) => {
 			setAttributes( { newAlt: newValue } );
 		};
-		
-		const [ toggled, setToggled ] = useState( sizes );
 
-		useEffect(() => {
-			// Update the Atribute after new state using hooks instead of classes
-			setAttributes( { sizes: toggled } );
-		}, [toggled]);
+		const onChangeSmallThumb = ( newValue ) => {
+			setAttributes( { smallThumb: newValue } );
+		};
+
+		const onChangeMediumThumb = ( newValue ) => {
+			setAttributes( { mediumThumb: newValue } );
+		};
+		
+		// Set the initial state of the Component
+		const [ size, setSizes ] = useState( sizes );
+
+		// Update the Component after new state is set
+		// Equivalent to componentDidMount in Classes
+		useEffect(
+			() => {
+			setAttributes( { sizes: size } );
+
+			// Starts after each new render. Here the variables determines when the function is called
+		}, [size]);
 
 		return (
 			<div className={ className }>
 				<BlockControls>
-                        <AlignmentToolbar
-                            value={ alignment }
-                            onChange={ onChangeAlignment }
-                        />
+                    <AlignmentToolbar
+                        value={ alignment }
+                        onChange={ onChangeAlignment }
+                    />
 					{
 						mediaURL && (
 							<MediaUploadCheck>
-							<Toolbar>
-								<MediaUpload
-									onSelect={ onSelectImage }
-									allowedTypes="image"
-									value={ mediaID }
-									render={ ( { open } ) => (
-										<IconButton
-											className="components-toolbar__control"
-											label={ __( 'Edit media' ) }
-											icon="edit"
-											onClick={ open }
-										/>
-									) }
-								/>
-							</Toolbar>
-						</MediaUploadCheck>
+								<Toolbar>
+									<MediaUpload
+										onSelect={ onSelectImage }
+										allowedTypes="image"
+										value={ mediaID }
+										render={ ( { open } ) => (
+											<IconButton
+												className="components-toolbar__control"
+												label={ __( 'Edit media' ) }
+												icon="edit"
+												onClick={ open }
+											/>
+											) 	
+										}
+									/>
+								</Toolbar>
+							</MediaUploadCheck>
 						)
 					}
-
                 </BlockControls>
 				
 				<InspectorControls>
-
 					<TextareaControl
 						label={ __( 'Alt Text (Alternative Text)' ) }
 						value={ newAlt }
@@ -166,54 +186,87 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 						}
 					/>
 					<ToggleControl
-						label="Server Scale"
-						help="You need to upload 3 images"
+						label={ __( 'Server Scale' ) }
+						help={ __( 'You need to upload 3 images' ) }
 						checked={ toggleField }
 						onChange={ onChangeToggleField }
 					/>
-					<PanelBody title={ __( 'Source Settings' ) } initialOpen={ false }>
-						<TextControl
-							label="Media Atribute"
-							help="Enter the min-width em pixels."
-							value={ mediaSource }
-							onChange={ onChangeMedia }
-						/>
+					{
+					toggleField && (
+						<PanelBody title={ __( 'Source Settings' ) } initialOpen={ false }>
+							<TextControl
+								label={ __( 'Media Atribute' ) }
+								help={ __( 'Enter the min-width in pixels' ) }
+								value={ mediaSource }
+								onChange={ onChangeMedia }
+							/>
 
-						<SelectControl
-							label="Predefined Size"
-							value={ selectSize }
-							options={
-								[
-									{ value: '100vw', label: '100vw' },
-									{ value: '80vw', label: '80vw' },
-									{ value: '50vw', label: '50vw' },
-									{ value: '25vw', label: '25vw' },
-								]
-							}
-							onChange={ onChangeSize }
-						/>
-						<div className="block-library-image__dimensions__row">
-								<ButtonGroup aria-label={ __( 'Image Size' ) }>
-									{ [ '25vw', '50vw', '75vw', '100vw' ].map( ( scale ) => {
-										return (
-											<Button
-												key={ scale }
-												isSmall
-												isPrimary={toggled === scale}
-												aria-pressed={toggled === scale}
-												onClick={() => setToggled(  toggled === scale ? null: scale )}
-											>
-												{ scale }
-											</Button>
-										);
-									} ) }
-								</ButtonGroup>
+							<SelectControl
+								label={ __( 'Original image size' ) }
+								value={ selectSize }
+								options={
+									[
+										{ value: '100vw', label: '1200px' },
+										{ value: '80vw', label: '1024px' },
+										{ value: '50vw', label: '800px' },
+										{ value: '25vw', label: '600px' },
+									]
+								}
+								onChange={ onChangeSize }
+							/>
+
+							<div className="block-library-image__dimensions">
+								<p className="block-library-image__dimensions__row">
+									{ __( 'Webp Thumbnails sizes (eg: 300w)' ) }
+								</p>
+
+								<div className="block-library-image__dimensions__row">
+									<TextControl
+										className="block-library-image__dimensions__width"
+										label={ __( 'Small' ) }
+										value={ smallThumb }
+										onChange={ onChangeSmallThumb }
+									/>
+									<TextControl
+										className="block-library-image__dimensions__height"
+										label={ __( 'Medium' ) }
+										value={ mediumThumb }
+										onChange={ onChangeMediumThumb }
+									/>
+								</div>
+
+								<div className="block-library-image__dimensions__row">
+									<div>
+										<p className="block-library-image__dimensions__row">
+											{ __( 'Sizes attribute' ) }
+										</p>
+										
+										<ButtonGroup aria-label={ __( 'Image Size' ) }>
+											{ [ '25vw', '50vw', '75vw', '100vw' ].map( ( scale ) => {
+												return (
+													<Button
+														key={ scale }
+														isSmall
+														isPrimary={size === scale}
+														aria-pressed={size === scale}
+														onClick={() => setSizes( size === scale ? null: scale )}
+													>
+														{ scale }
+													</Button>
+													);
+												}) 
+											}
+										</ButtonGroup>
+									</div>
+								</div>
 							</div>
-					</PanelBody>
+						</PanelBody>
+						)
+					}
 				</InspectorControls>
 
 				<div className="picture-image">
-					{
+					{ 
 						! mediaURL && (
 							<MediaPlaceholder
 								labels={ __( 'Image' ) }
@@ -223,13 +276,12 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 								value={ mediaID }
 							/>
 						)
-					}{
+					}{ 
 						mediaURL && (
-						<div>			
 							<figure className={ className } style={ { textAlign: alignment, margin: 0 } } >
 								<img src={ mediaURL } alt={ mediaAlt } sizes={ sizes } />
 							</figure>
-						</div> )
+						)
 					}
 				</div>
 			</div>
@@ -244,12 +296,30 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				mediaSource,
 				newAlt,
 				sizes,
+				toggleField,
+				smallThumb,
+				mediumThumb,
+				selectSize,
 			},
 		} = props;
 		return (
 			<picture className={ className }>
-				<RichText.Content tagName="source" media={ `(min-width:${ mediaSource })` } type="image/webp" srcset={ mediaURL + `.webp` } sizes={ sizes } />
-				
+				{
+					! toggleField && (
+						<source type="image/webp" srcset={mediaURL + `.webp`} />
+					)
+				}
+				{
+					toggleField && (
+						<RichText.Content 
+							tagName="source" 
+							media={ `(min-width:${ mediaSource })` } 
+							type="image/webp" 
+							srcset={ mediaURL + `.webp ${ selectSize },` + ` ` + mediaURL + `-small.webp ${ smallThumb },` + ` ` + mediaURL + `-medium.webp ${ mediumThumb }` } 
+							sizes={ sizes } 
+				/>
+					)
+				}				
 				{
 					mediaURL && (
 						<img className={ mediaID ? `wp-image-${ mediaID }-align-${ props.attributes.alignment }` : null } src={ mediaURL } alt={ newAlt } />
