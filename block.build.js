@@ -222,6 +222,10 @@
         type: 'string',
         selector: 'img'
       },
+      mediaJPG: {
+        type: 'string',
+        selector: 'img'
+      },
       mediaSource: {
         type: 'string'
       },
@@ -231,9 +235,6 @@
       },
       toggleField: {
         type: 'boolean'
-      },
-      selectSize: {
-        type: 'string'
       },
       newAlt: {
         type: 'string'
@@ -246,6 +247,15 @@
       },
       mediumThumb: {
         type: 'string'
+      },
+      originalSizeThumb: {
+        type: 'string'
+      },
+      smallSizeThumb: {
+        type: 'string'
+      },
+      mediumSizeThumb: {
+        type: 'string'
       }
     },
     edit: function edit(props) {
@@ -253,15 +263,18 @@
           _props$attributes = props.attributes,
           mediaID = _props$attributes.mediaID,
           mediaURL = _props$attributes.mediaURL,
+          mediaJPG = _props$attributes.mediaJPG,
           alignment = _props$attributes.alignment,
           mediaAlt = _props$attributes.mediaAlt,
           toggleField = _props$attributes.toggleField,
-          selectSize = _props$attributes.selectSize,
           mediaSource = _props$attributes.mediaSource,
           newAlt = _props$attributes.newAlt,
           sizes = _props$attributes.sizes,
           smallThumb = _props$attributes.smallThumb,
           mediumThumb = _props$attributes.mediumThumb,
+          originalSizeThumb = _props$attributes.originalSizeThumb,
+          smallSizeThumb = _props$attributes.smallSizeThumb,
+          mediumSizeThumb = _props$attributes.mediumSizeThumb,
           setAttributes = props.setAttributes;
   
       var onSelectImage = function onSelectImage(media) {
@@ -269,6 +282,27 @@
           mediaURL: media.url,
           mediaID: media.id,
           mediaAlt: media.alt
+        });
+      };
+  
+      var onSelectJpgImage = function onSelectJpgImage(original) {
+        setAttributes({
+          mediaJPG: original.url,
+          mediaID: original.id
+        });
+      };
+  
+      var onSelectSmallThumb = function onSelectSmallThumb(small) {
+        setAttributes({
+          smallThumb: small.url,
+          mediaID: small.id
+        });
+      };
+  
+      var onSelectMediumThumb = function onSelectMediumThumb(medium) {
+        setAttributes({
+          mediumThumb: medium.url,
+          mediaID: medium.id
         });
       };
   
@@ -290,27 +324,27 @@
         });
       };
   
-      var onChangeSize = function onChangeSize(newValue) {
-        setAttributes({
-          selectSize: newValue
-        });
-      };
-  
       var onChangenewAlt = function onChangenewAlt(newValue) {
         setAttributes({
           newAlt: newValue
         });
       };
   
-      var onChangeSmallThumb = function onChangeSmallThumb(newValue) {
+      var onChangeSizeOriginalThumb = function onChangeSizeOriginalThumb(newValue) {
         setAttributes({
-          smallThumb: newValue
+          originalSizeThumb: newValue
         });
       };
   
-      var onChangeMediumThumb = function onChangeMediumThumb(newValue) {
+      var onChangeSizeSmallThumb = function onChangeSizeSmallThumb(newValue) {
         setAttributes({
-          mediumThumb: newValue
+          smallSizeThumb: newValue
+        });
+      };
+  
+      var onChangeSizeMediumThumb = function onChangeSizeMediumThumb(newValue) {
+        setAttributes({
+          mediumSizeThumb: newValue
         });
       }; // Set the initial state of the Component
   
@@ -334,10 +368,12 @@
         return function () {
           if (toggleField === false) {
             setAttributes({
-              sizes: undefined,
-              mediumThumb: undefined,
-              selectSize: undefined,
+              smallSizeThumb: undefined,
+              mediumSizeThumb: undefined,
+              originalSizeThumb: undefined,
               smallThumb: undefined,
+              mediumThumb: undefined,
+              sizes: undefined,
               mediaSource: undefined
             });
           } // Starts after each new render. Here the variables determines when the function is called
@@ -362,7 +398,39 @@
             onClick: open
           });
         }
-      })))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextareaControl, {
+      })))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "media-jpg-image"
+      }, !mediaJPG && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+        className: "block-library-image__dimensions__row",
+        style: {
+          fontWeight: 700,
+          marginTop: 20
+        }
+      }, __('Note: Enter one JPG callback image for crossbrowser support')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+        onSelect: onSelectJpgImage,
+        allowedTypes: "image",
+        value: mediaID,
+        render: function render(_ref2) {
+          var open = _ref2.open;
+          return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
+            className: mediaJPG ? 'image-button' : 'button button-large',
+            onClick: open,
+            style: {
+              marginTop: 10,
+              marginBottom: 20
+            }
+          }, !mediaJPG ? __('Upload JPG callback image', 'gutenberg-examples') : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions__row"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            style: {
+              fontWeight: 700
+            }
+          }, __('JPG Callback')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
+            src: mediaJPG,
+            alt: __('Upload Recipe Image', 'gutenberg-examples')
+          })));
+        }
+      }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextareaControl, {
         label: __('Alt Text (Alternative Text)'),
         value: newAlt,
         onChange: onChangenewAlt,
@@ -375,6 +443,53 @@
         checked: toggleField,
         onChange: onChangeToggleField
       }), toggleField && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(PanelBody, {
+        title: __('Thumbnails'),
+        initialOpen: true
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "media-small-image",
+        style: {
+          marginTop: 10
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+        onSelect: onSelectSmallThumb,
+        allowedTypes: "image",
+        value: mediaID,
+        render: function render(_ref3) {
+          var open = _ref3.open;
+          return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
+            className: smallThumb ? 'image-button' : 'button button-large',
+            onClick: open
+          }, !smallThumb ? __('Upload Small WebP', 'gutenberg-examples') : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions__row"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            style: {
+              fontWeight: 700
+            }
+          }, __('Small WebP')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, smallThumb)));
+        }
+      }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "media-medium-image",
+        style: {
+          marginTop: 10
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+        onSelect: onSelectMediumThumb,
+        allowedTypes: "image",
+        value: mediaID,
+        render: function render(_ref4) {
+          var open = _ref4.open;
+          return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
+            className: mediumThumb ? 'image-button' : 'button button-large',
+            onClick: open
+          }, !mediumThumb ? __('Upload Medium WebP', 'gutenberg-examples') : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions__row"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            style: {
+              fontWeight: 700
+            }
+          }, __('Medium WebP')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, mediumThumb)));
+        }
+      })))), toggleField && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(PanelBody, {
         title: __('Source Settings'),
         initialOpen: false
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
@@ -382,39 +497,29 @@
         help: __('Enter the min-width in pixels'),
         value: mediaSource,
         onChange: onChangeMedia
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(SelectControl, {
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
         label: __('Original image size'),
-        value: selectSize,
-        options: [{
-          value: '1200w',
-          label: '1200w'
-        }, {
-          value: '1024w',
-          label: '1024w'
-        }, {
-          value: '800w',
-          label: '800w'
-        }, {
-          value: '600w',
-          label: '600w'
-        }],
-        onChange: onChangeSize
+        help: __('e.g., 1200w'),
+        value: originalSizeThumb,
+        onChange: onChangeSizeOriginalThumb
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "block-library-image__dimensions"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
         className: "block-library-image__dimensions__row"
-      }, __('Webp Thumbnails sizes (eg: 300w)')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+      }, __('Webp Thumbnails Scale')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "block-library-image__dimensions__row"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
         className: "block-library-image__dimensions__width",
         label: __('Small'),
-        value: smallThumb,
-        onChange: onChangeSmallThumb
+        help: __('e.g., 300w'),
+        value: smallSizeThumb,
+        onChange: onChangeSizeSmallThumb
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
         className: "block-library-image__dimensions__height",
         label: __('Medium'),
-        value: mediumThumb,
-        onChange: onChangeMediumThumb
+        help: __('e.g., 768w'),
+        value: mediumSizeThumb,
+        onChange: onChangeSizeMediumThumb
       })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "block-library-image__dimensions__row"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
@@ -456,27 +561,30 @@
           _props$attributes2 = props.attributes,
           mediaID = _props$attributes2.mediaID,
           mediaURL = _props$attributes2.mediaURL,
+          mediaJPG = _props$attributes2.mediaJPG,
           mediaSource = _props$attributes2.mediaSource,
           newAlt = _props$attributes2.newAlt,
           sizes = _props$attributes2.sizes,
           toggleField = _props$attributes2.toggleField,
           smallThumb = _props$attributes2.smallThumb,
           mediumThumb = _props$attributes2.mediumThumb,
-          selectSize = _props$attributes2.selectSize;
+          originalSizeThumb = _props$attributes2.originalSizeThumb,
+          smallSizeThumb = _props$attributes2.smallSizeThumb,
+          mediumSizeThumb = _props$attributes2.mediumSizeThumb;
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("picture", {
         className: className
       }, !toggleField && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("source", {
         type: "image/webp",
-        srcset: mediaURL + ".webp"
+        srcset: mediaURL
       }), toggleField && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(RichText.Content, {
         tagName: "source",
         media: "(min-width:".concat(mediaSource, ")"),
         type: "image/webp",
-        srcset: mediaURL + ".webp ".concat(selectSize, ",") + '' + mediaURL + "-small.webp ".concat(smallThumb, ",") + '' + mediaURL + "-medium.webp ".concat(mediumThumb),
+        srcset: mediaURL + " ".concat(originalSizeThumb, ", ") + smallThumb + " ".concat(smallSizeThumb, ", ") + mediumThumb + " ".concat(mediumSizeThumb),
         sizes: sizes
-      }), mediaURL && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
+      }), mediaJPG && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
         className: mediaID ? "wp-image-".concat(mediaID, "-align-").concat(props.attributes.alignment) : null,
-        src: mediaURL,
+        src: mediaJPG,
         alt: newAlt
       }));
     }
