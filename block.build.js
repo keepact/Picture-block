@@ -191,7 +191,6 @@
       MediaUpload = _wp$blockEditor.MediaUpload,
       MediaUploadCheck = _wp$blockEditor.MediaUploadCheck,
       BlockControls = _wp$blockEditor.BlockControls,
-      AlignmentToolbar = _wp$blockEditor.AlignmentToolbar,
       InspectorControls = _wp$blockEditor.InspectorControls;
   var _wp$components = wp.components,
       Button = _wp$components.Button,
@@ -208,6 +207,9 @@
     title: __('Picture: Webp Block test', 'gutenberg-examples'),
     icon: 'index-card',
     category: 'layout',
+    supports: {
+      align: true
+    },
     attributes: {
       mediaID: {
         type: 'number'
@@ -229,15 +231,8 @@
       mediaSource: {
         type: 'string'
       },
-      alignment: {
-        type: 'string',
-        default: 'none'
-      },
       toggleField: {
         type: 'boolean'
-      },
-      newAlt: {
-        type: 'string'
       },
       sizes: {
         type: 'string'
@@ -268,7 +263,6 @@
           mediaAlt = _props$attributes.mediaAlt,
           toggleField = _props$attributes.toggleField,
           mediaSource = _props$attributes.mediaSource,
-          newAlt = _props$attributes.newAlt,
           sizes = _props$attributes.sizes,
           smallThumb = _props$attributes.smallThumb,
           mediumThumb = _props$attributes.mediumThumb,
@@ -288,7 +282,8 @@
       var onSelectJpgImage = function onSelectJpgImage(original) {
         setAttributes({
           mediaJPG: original.url,
-          mediaID: original.id
+          mediaID: original.id,
+          mediaAlt: original.alt
         });
       };
   
@@ -306,12 +301,6 @@
         });
       };
   
-      var onChangeAlignment = function onChangeAlignment(newAlignment) {
-        props.setAttributes({
-          alignment: newAlignment === undefined ? 'none' : newAlignment
-        });
-      };
-  
       var onChangeMedia = function onChangeMedia(newValue) {
         setAttributes({
           mediaSource: newValue
@@ -324,9 +313,9 @@
         });
       };
   
-      var onChangenewAlt = function onChangenewAlt(newValue) {
+      var onChangenewAlt = function onChangenewAlt(newAlt) {
         setAttributes({
-          newAlt: newValue
+          mediaAlt: newAlt
         });
       };
   
@@ -346,6 +335,13 @@
         setAttributes({
           mediumSizeThumb: newValue
         });
+      };
+  
+      var onChangeRemoveJpg = function onChangeRemoveJpg() {
+        setAttributes({
+          mediaJPG: undefined,
+          mediaAlt: undefined
+        });
       }; // Set the initial state of the Component
   
   
@@ -362,7 +358,7 @@
             sizes: size
           });
         } // The Cleaning function is inside the hook
-        // Equivalent to ComponentDidUnmount in Classes
+        // Equivalent to componentWillUnmount in Classes
   
   
         return function () {
@@ -382,10 +378,7 @@
       }, [size, toggleField]);
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: className
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(BlockControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(AlignmentToolbar, {
-        value: alignment,
-        onChange: onChangeAlignment
-      }), mediaURL && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(BlockControls, null, mediaURL && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
         onSelect: onSelectImage,
         allowedTypes: "image",
         value: mediaID,
@@ -406,7 +399,7 @@
           fontWeight: 700,
           marginTop: 20
         }
-      }, __('Note: Enter one JPG callback image for crossbrowser support')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+      }, __('Note: Enter one JPG callback image for crossbrowser support')), !mediaJPG && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
         onSelect: onSelectJpgImage,
         allowedTypes: "image",
         value: mediaID,
@@ -419,20 +412,55 @@
               marginTop: 10,
               marginBottom: 20
             }
-          }, !mediaJPG ? __('Upload JPG callback image', 'gutenberg-examples') : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-            className: "block-library-image__dimensions__row"
-          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-            style: {
-              fontWeight: 700
-            }
-          }, __('JPG Callback')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
-            src: mediaJPG,
-            alt: __('Upload Recipe Image', 'gutenberg-examples')
-          })));
+          }, !mediaJPG && __('Upload JPG callback image', 'gutenberg-examples'));
         }
-      }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextareaControl, {
+      })), mediaJPG && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-picture__dimensions__row",
+        style: {
+          marginBottom: 20,
+          marginTop: 10
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+        style: {
+          fontWeight: 700,
+          textAlign: 'center'
+        }
+      }, __('JPG Callback')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-image__dimensions__row",
+        style: {
+          position: 'relative'
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
+        src: mediaJPG,
+        alt: mediaAlt
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "picture-block-toolbar",
+        style: {
+          position: 'absolute',
+          top: 0,
+          right: 0
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+        onSelect: onSelectJpgImage,
+        allowedTypes: "image",
+        value: mediaID,
+        render: function render(_ref3) {
+          var open = _ref3.open;
+          return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(IconButton, {
+            className: "components-toolbar__control",
+            label: __('Edit media'),
+            icon: "edit",
+            onClick: open
+          });
+        }
+      })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(IconButton, {
+        className: "components-toolbar__control",
+        label: __('Remove media'),
+        icon: "trash",
+        onClick: onChangeRemoveJpg
+      })))))), mediaJPG && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextareaControl, {
         label: __('Alt Text (Alternative Text)'),
-        value: newAlt,
+        value: mediaAlt,
         onChange: onChangenewAlt,
         help: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ExternalLink, {
           href: "https://www.w3.org/WAI/tutorials/images/decision-tree"
@@ -454,8 +482,8 @@
         onSelect: onSelectSmallThumb,
         allowedTypes: "image",
         value: mediaID,
-        render: function render(_ref3) {
-          var open = _ref3.open;
+        render: function render(_ref4) {
+          var open = _ref4.open;
           return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
             className: smallThumb ? 'image-button' : 'button button-large',
             onClick: open
@@ -476,8 +504,8 @@
         onSelect: onSelectMediumThumb,
         allowedTypes: "image",
         value: mediaID,
-        render: function render(_ref4) {
-          var open = _ref4.open;
+        render: function render(_ref5) {
+          var open = _ref5.open;
           return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
             className: mediumThumb ? 'image-button' : 'button button-large',
             onClick: open
@@ -563,7 +591,7 @@
           mediaURL = _props$attributes2.mediaURL,
           mediaJPG = _props$attributes2.mediaJPG,
           mediaSource = _props$attributes2.mediaSource,
-          newAlt = _props$attributes2.newAlt,
+          mediaAlt = _props$attributes2.mediaAlt,
           sizes = _props$attributes2.sizes,
           toggleField = _props$attributes2.toggleField,
           smallThumb = _props$attributes2.smallThumb,
@@ -583,9 +611,9 @@
         srcset: mediaURL + " ".concat(originalSizeThumb, ", ") + smallThumb + " ".concat(smallSizeThumb, ", ") + mediumThumb + " ".concat(mediumSizeThumb),
         sizes: sizes
       }), mediaJPG && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
-        className: mediaID ? "wp-image-".concat(mediaID, "-align-").concat(props.attributes.alignment) : null,
+        className: mediaID ? "wp-image-".concat(mediaID) : null,
         src: mediaJPG,
-        alt: newAlt
+        alt: mediaAlt
       }));
     }
   });
