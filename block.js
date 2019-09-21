@@ -47,6 +47,10 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			type: 'string',
 			selector: 'img',
 		},
+		mediaJPG: {
+			type: 'string',
+			selector: 'img',
+		},
 		mediaSource: {
 			type: 'string',
 		},
@@ -56,9 +60,6 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		},
 		toggleField: {
 			type: 'boolean',
-		},
-		selectSize: {
-			type: 'string',
 		},
 		newAlt: {
 			type: 'string',
@@ -72,6 +73,15 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		mediumThumb: {
 			type: 'string',
 		},
+		originalSizeThumb: {
+			type: 'string',
+		},
+		smallSizeThumb: {
+			type: 'string',
+		},
+		mediumSizeThumb: {
+			type: 'string',
+		},
 	},
 	edit: ( props ) => {
 		const {
@@ -79,15 +89,18 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			attributes: {
 				mediaID,
 				mediaURL,
+				mediaJPG,
 				alignment,
 				mediaAlt, 
 				toggleField, 
-				selectSize,
 				mediaSource,
 				newAlt,
 				sizes,
 				smallThumb,
 				mediumThumb,
+				originalSizeThumb,
+				smallSizeThumb,
+				mediumSizeThumb,
 			},
 			setAttributes,
 		} = props;
@@ -97,6 +110,27 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				mediaURL: media.url,
 				mediaID: media.id,
 				mediaAlt: media.alt,
+			});
+		};
+
+		const onSelectJpgImage = ( original ) => {
+			setAttributes( {
+				mediaJPG: original.url,
+				mediaID: original.id,
+			});
+		};
+
+		const onSelectSmallThumb = ( small ) => {
+			setAttributes( {
+				smallThumb: small.url,
+				mediaID: small.id,
+			});
+		};
+
+		const onSelectMediumThumb = ( medium ) => {
+			setAttributes( {
+				mediumThumb: medium.url,
+				mediaID: medium.id,
 			});
 		};
 
@@ -112,20 +146,20 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			setAttributes( { toggleField: newValue } );
 		};
 
-		const onChangeSize = ( newValue ) => {
-			setAttributes( { selectSize: newValue } );
-		};
-
 		const onChangenewAlt = ( newValue ) => {
 			setAttributes( { newAlt: newValue } );
 		};
 
-		const onChangeSmallThumb = ( newValue ) => {
-			setAttributes( { smallThumb: newValue } );
+		const onChangeSizeOriginalThumb = ( newValue ) => {
+			setAttributes( { originalSizeThumb: newValue } );
 		};
 
-		const onChangeMediumThumb = ( newValue ) => {
-			setAttributes( { mediumThumb: newValue } );
+		const onChangeSizeSmallThumb = ( newValue ) => {
+			setAttributes( { smallSizeThumb: newValue } );
+		};
+
+		const onChangeSizeMediumThumb = ( newValue ) => {
+			setAttributes( { mediumSizeThumb: newValue } );
 		};
 		
 		// Set the initial state of the Component
@@ -143,10 +177,12 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			return () => {
 			if (toggleField === false) {
 				setAttributes( { 
-					sizes: undefined,
-					mediumThumb: undefined,
-					selectSize: undefined,
+					smallSizeThumb: undefined,
+					mediumSizeThumb: undefined,
+					originalSizeThumb: undefined,
 					smallThumb: undefined,
+					mediumThumb: undefined,
+					sizes: undefined,
 					mediaSource: undefined } );
 			}
 			// Starts after each new render. Here the variables determines when the function is called
@@ -184,6 +220,32 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
                 </BlockControls>
 				
 				<InspectorControls>
+					<div className="media-jpg-image">
+						{
+							! mediaJPG && (
+								<p className="block-library-image__dimensions__row" style={{fontWeight : 700, marginTop : 20}}>
+									{ __( 'Note: Enter one JPG callback image for crossbrowser support' ) }
+								</p>
+							)
+						}
+							<MediaUploadCheck>
+								<MediaUpload
+									onSelect={ onSelectJpgImage }
+									allowedTypes="image"
+									value={ mediaID }
+									render={ ( { open } ) => (
+										<Button className={ mediaJPG ? 'image-button' : 'button button-large' } onClick={ open } style={{marginTop : 10, marginBottom : 20}}>
+											{ ! mediaJPG ? __( 'Upload JPG callback image', 'gutenberg-examples' ) :
+												<div className="block-library-image__dimensions__row">
+													<p style={{fontWeight : 700}}>{ __( 'JPG Callback' ) }</p> 
+													<img src={ mediaJPG } alt={ __( 'Upload Recipe Image', 'gutenberg-examples' ) } />
+												</div> 
+											}
+										</Button>
+									)}
+								/>
+							</MediaUploadCheck>
+					</div>
 					<TextareaControl
 						label={ __( 'Alt Text (Alternative Text)' ) }
 						value={ newAlt }
@@ -204,6 +266,50 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 						onChange={ onChangeToggleField }
 					/>
 					{
+						toggleField && (
+							<PanelBody title={ __( 'Thumbnails' ) } initialOpen={ true }>
+								<div className="media-small-image" style={{ marginTop : 10 }}>
+									<MediaUploadCheck>
+										<MediaUpload
+											onSelect={ onSelectSmallThumb  }
+											allowedTypes="image"
+											value={ mediaID }
+											render={ ( { open } ) => (
+												<Button className={ smallThumb ? 'image-button' : 'button button-large' } onClick={ open }>
+													{ ! smallThumb ? __( 'Upload Small WebP', 'gutenberg-examples' ) : 
+														<div className="block-library-image__dimensions__row">
+															<p style={{fontWeight : 700}}>{ __( 'Small WebP' ) }</p>
+															<u>{ smallThumb }</u> 
+														</div>
+													}
+												</Button>
+											)}
+										/>
+									</MediaUploadCheck>
+								</div>
+								<div className="media-medium-image" style={{ marginTop : 10 }}>
+									<MediaUploadCheck>
+										<MediaUpload
+											onSelect={ onSelectMediumThumb  }
+											allowedTypes="image"
+											value={ mediaID }
+											render={ ( { open } ) => (
+												<Button className={ mediumThumb ? 'image-button' : 'button button-large' } onClick={ open }>
+													{ ! mediumThumb ? __( 'Upload Medium WebP', 'gutenberg-examples' ) : 
+														<div className="block-library-image__dimensions__row">
+															<p style={{fontWeight : 700}}>{ __( 'Medium WebP' ) }</p>
+															<u>{ mediumThumb }</u>
+														</div>
+													}
+												</Button>
+											)}
+										/>
+									</MediaUploadCheck>
+								</div>
+							</PanelBody>
+						)
+					}
+					{
 					toggleField && (
 						<PanelBody title={ __( 'Source Settings' ) } initialOpen={ false }>
 							<TextControl
@@ -213,37 +319,32 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 								onChange={ onChangeMedia }
 							/>
 
-							<SelectControl
+							<TextControl
 								label={ __( 'Original image size' ) }
-								value={ selectSize }
-								options={
-									[
-										{ value: '1200w', label: '1200w' },
-										{ value: '1024w', label: '1024w' },
-										{ value: '800w', label: '800w' },
-										{ value: '600w', label: '600w' },
-									]
-								}
-								onChange={ onChangeSize }
+								help={ __( 'e.g., 1200w' ) }
+								value={ originalSizeThumb }
+								onChange={ onChangeSizeOriginalThumb }
 							/>
 
 							<div className="block-library-image__dimensions">
 								<p className="block-library-image__dimensions__row">
-									{ __( 'Webp Thumbnails sizes (eg: 300w)' ) }
+									{ __( 'Webp Thumbnails Scale' ) }
 								</p>
 
 								<div className="block-library-image__dimensions__row">
 									<TextControl
 										className="block-library-image__dimensions__width"
 										label={ __( 'Small' ) }
-										value={ smallThumb }
-										onChange={ onChangeSmallThumb }
+										help={ __( 'e.g., 300w' ) }
+										value={ smallSizeThumb }
+										onChange={ onChangeSizeSmallThumb }
 									/>
 									<TextControl
 										className="block-library-image__dimensions__height"
 										label={ __( 'Medium' ) }
-										value={ mediumThumb }
-										onChange={ onChangeMediumThumb }
+										help={ __( 'e.g., 768w' ) }
+										value={ mediumSizeThumb }
+										onChange={ onChangeSizeMediumThumb }
 									/>
 								</div>
 
@@ -305,20 +406,23 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			attributes: {
 				mediaID,
 				mediaURL,
+				mediaJPG,
 				mediaSource,
 				newAlt,
 				sizes,
 				toggleField,
 				smallThumb,
 				mediumThumb,
-				selectSize,
+				originalSizeThumb,
+				smallSizeThumb,
+				mediumSizeThumb,
 			},
 		} = props;
 		return (
 			<picture className={ className }>
 				{
 					! toggleField && (
-						<source type="image/webp" srcset={mediaURL + `.webp`} />
+						<source type="image/webp" srcset={ mediaURL } />
 					)
 				}
 				{
@@ -327,14 +431,14 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 							tagName="source" 
 							media={ `(min-width:${ mediaSource })` } 
 							type="image/webp" 
-							srcset={ mediaURL + `.webp ${ selectSize },` + '' + mediaURL + `-small.webp ${ smallThumb },` + '' + mediaURL + `-medium.webp ${ mediumThumb }` } 
+							srcset={ mediaURL + ` ${originalSizeThumb}, ` + smallThumb + ` ${smallSizeThumb}, ` + mediumThumb + ` ${mediumSizeThumb}` } 
 							sizes={ sizes } 
 				/>
 					)
 				}				
 				{
-					mediaURL && (
-						<img className={ mediaID ? `wp-image-${ mediaID }-align-${ props.attributes.alignment }` : null } src={ mediaURL } alt={ newAlt } />
+					mediaJPG && (
+						<img className={ mediaID ? `wp-image-${ mediaID }-align-${ props.attributes.alignment }` : null } src={ mediaJPG } alt={ newAlt } />
 					)
 				}
 			</picture>
