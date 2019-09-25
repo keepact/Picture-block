@@ -1,4 +1,5 @@
 /* global wp */
+import ImageLink from './imagelink';
 const { __ } = wp.i18n;
 const {
 	registerBlockType,
@@ -19,7 +20,6 @@ const {
 	Button, 
 	TextControl,
 	ToggleControl,
-	SelectControl,
 	PanelBody,
 	TextareaControl,
 	ExternalLink, 
@@ -77,6 +77,27 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		mediumSizeThumb: {
 			type: 'string',
 		},
+		href: {
+			type: 'string',
+		},
+		rel: {
+			type: 'string',
+		},
+		linkDestination: {
+			type: 'string',
+			default: 'none',
+		},
+		linkTarget: {
+			type: 'string',
+		},
+		linkNoFollow: {
+			type: 'boolean',
+			default: false,
+		},
+		linkSponsored: {
+			type: 'boolean',
+			default: false,
+		},
 	},
 	edit: ( props ) => {
 		const {
@@ -85,7 +106,6 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				mediaID,
 				mediaURL,
 				mediaJPG,
-				alignment,
 				mediaAlt, 
 				toggleField, 
 				mediaSource,
@@ -183,6 +203,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			// Starts after each new render. Here the variables determines when the function is called
 		}}, [size, toggleField]);
 
+ 		
 		return (
 			<div className={ className }>
 				<BlockControls>
@@ -207,6 +228,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 							</MediaUploadCheck>
 						)
 					}
+					<ImageLink { ...props } />
                 </BlockControls>
 				
 				<InspectorControls>
@@ -334,7 +356,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 					{ toggleField && (
 						<PanelBody title={ __( 'Source Settings' ) } initialOpen={ false }>
 							<TextControl
-								label={ __( 'Media Atribute' ) }
+								label={ __( 'Media attribute' ) }
 								help={ __( 'Enter the min-width in pixels' ) }
 								value={ mediaSource }
 								onChange={ onChangeMedia }
@@ -411,7 +433,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 						)
 					}
 					{ mediaURL && (
-							<figure className={ className } style={ { textAlign: alignment, margin: 0 } } >
+							<figure className={ className } style={ { margin: 0 } } >
 								<img src={ mediaURL } alt={ mediaAlt } sizes={ sizes } />
 							</figure>
 						)
@@ -422,7 +444,6 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 	},
 	save: ( props ) => {
 		const {
-			className,
 			attributes: {
 				mediaID,
 				mediaURL,
@@ -430,38 +451,69 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				mediaSource,
 				mediaAlt,
 				sizes,
+				href,
 				toggleField,
 				smallThumb,
 				mediumThumb,
 				originalSizeThumb,
 				smallSizeThumb,
 				mediumSizeThumb,
+				linkTarget,
+				rel,
 			},
 		} = props;
-		return (
-			<picture className={ className }>
-				{
-					! toggleField && (
-						<source type="image/webp" srcset={ mediaURL } />
-					)
-				}
-				{
-					toggleField && (
-						<RichText.Content 
-							tagName="source" 
-							media={ `(min-width:${ mediaSource })` } 
-							type="image/webp" 
-							srcset={ mediaURL + ` ${originalSizeThumb}, ` + smallThumb + ` ${smallSizeThumb}, ` + mediumThumb + ` ${mediumSizeThumb}` } 
-							sizes={ sizes } 
+
+		const source = (
+			<source type="image/webp" srcset={ mediaURL } />
+		);
+
+		const scale = (
+			<>
+				{ toggleField ? (
+					<RichText.Content 
+						tagName="source" 
+						media={ `(min-width:${ mediaSource })` } 
+						type="image/webp" 
+						srcset={ mediaURL + ` ${originalSizeThumb}, ` + smallThumb + ` ${smallSizeThumb}, ` + mediumThumb + ` ${mediumSizeThumb}` } 
+						sizes={ sizes } 
+					/>
+                    ) : source 
+                }				
+			</>
+		);
+
+		const image = (
+			<picture>
+				{ scale }
+				<img
+					src={ mediaJPG }
+					alt={ mediaAlt }
+					className={ mediaID ? `wp-image-${ mediaID }` : null }
 				/>
-					)
-				}				
-				{
-					mediaJPG && (
-						<img className={ mediaID ? `wp-image-${ mediaID }` : null } src={ mediaJPG } alt={ mediaAlt } />
-					)
-				}
 			</picture>
+		);
+
+		const figure = (
+			<>
+				{ href ? (
+					<a
+						className="picture-plugin-class"
+						href={ href }
+						target={ linkTarget }
+						rel={ rel }
+					>
+						{ image }
+					</a>
+				) : image }
+			</>
+		);
+
+		return (
+			<div>
+							
+            	{ figure }
+
+			</div>
 		);
 	},
 } );
