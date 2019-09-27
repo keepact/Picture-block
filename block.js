@@ -79,9 +79,15 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		},
 		href: {
 			type: 'string',
+			source: 'attribute',
+			selector: 'div > a',
+			attribute: 'href',
 		},
 		rel: {
 			type: 'string',
+			source: 'attribute',
+			selector: 'div > a',
+			attribute: 'rel',
 		},
 		linkDestination: {
 			type: 'string',
@@ -89,14 +95,15 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		},
 		linkTarget: {
 			type: 'string',
+			source: 'attribute',
+			selector: 'div > a',
+			attribute: 'target',
 		},
-		linkNoFollow: {
-			type: 'boolean',
-			default: false,
-		},
-		linkSponsored: {
-			type: 'boolean',
-			default: false,
+		linkClass: {
+			type: 'string',
+			source: 'attribute',
+			selector: 'div > a',
+			attribute: 'class',
 		},
 	},
 	edit: ( props ) => {
@@ -459,6 +466,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				smallSizeThumb,
 				mediumSizeThumb,
 				linkTarget,
+				linkClass,
 				rel,
 			},
 		} = props;
@@ -497,7 +505,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			<>
 				{ href ? (
 					<a
-						className="picture-plugin-class"
+						className={ linkClass }
 						href={ href }
 						target={ linkTarget }
 						rel={ rel }

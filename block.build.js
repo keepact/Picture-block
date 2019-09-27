@@ -405,6 +405,7 @@
   var URLPopover = wp.blockEditor.URLPopover;
   var _wp$components = wp.components,
       ToggleControl = _wp$components.ToggleControl,
+      TextControl = _wp$components.TextControl,
       IconButton = _wp$components.IconButton,
       Toolbar = _wp$components.Toolbar,
       Path = _wp$components.Path,
@@ -570,6 +571,8 @@
       _this.onSetNewTab = _this.onSetNewTab.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this));
       _this.getLinkDestinations = _this.getLinkDestinations.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this));
       _this.onSetHref = _this.onSetHref.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this));
+      _this.onSetLinkRel = _this.onSetLinkRel.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this));
+      _this.onSetLinkClass = _this.onSetLinkClass.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this));
       _this.state = {
         isVisible: false
       };
@@ -625,6 +628,20 @@
         });
       }
     }, {
+      key: "onSetLinkClass",
+      value: function onSetLinkClass(value) {
+        this.props.setAttributes({
+          linkClass: value
+        });
+      }
+    }, {
+      key: "onSetLinkRel",
+      value: function onSetLinkRel(value) {
+        this.props.setAttributes({
+          rel: value
+        });
+      }
+    }, {
       key: "getLinkDestinations",
       value: function getLinkDestinations() {
         return [{
@@ -660,15 +677,14 @@
     }, {
       key: "render",
       value: function render() {
-        var _this$props = this.props,
-            attributes = _this$props.attributes,
-            setAttributes = _this$props.setAttributes;
+        var attributes = this.props.attributes;
         var href = attributes.href,
+            rel = attributes.rel,
+            mediaURL = attributes.mediaURL,
             linkDestination = attributes.linkDestination,
             linkTarget = attributes.linkTarget,
-            linkNoFollow = attributes.linkNoFollow,
-            linkSponsored = attributes.linkSponsored;
-        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(ImageURLInputUI, {
+            linkClass = attributes.linkClass;
+        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Fragment, null, mediaURL && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(ImageURLInputUI, {
           url: href || '',
           onChangeUrl: this.onSetHref,
           mediaLinks: this.getLinkDestinations(),
@@ -677,24 +693,20 @@
             label: __('Open in New Tab', 'gutenberg-examples'),
             onChange: this.onSetNewTab,
             checked: linkTarget === '_blank'
-          }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(ToggleControl, {
-            label: __('No follow', 'gutenberg-examples'),
-            onChange: function onChange() {
-              setAttributes({
-                linkNoFollow: !linkNoFollow
-              });
-            },
-            checked: !!linkNoFollow
-          }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(ToggleControl, {
-            label: __('Sponsored', 'gutenberg-examples'),
-            onChange: function onChange() {
-              setAttributes({
-                linkSponsored: !linkSponsored
-              });
-            },
-            checked: !!linkSponsored
+          }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(TextControl, {
+            label: __('Link CSS Class'),
+            value: linkClass || '',
+            onKeyPress: stopPropagation,
+            onKeyDown: stopPropagationRelevantKeys,
+            onChange: this.onSetLinkClass
+          }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(TextControl, {
+            label: __('Link Rel'),
+            value: rel || '',
+            onChange: this.onSetLinkRel,
+            onKeyPress: stopPropagation,
+            onKeyDown: stopPropagationRelevantKeys
           }))
-        }));
+        })));
       }
     }]);
   
@@ -804,25 +816,32 @@
         type: 'string'
       },
       href: {
-        type: 'string'
+        type: 'string',
+        source: 'attribute',
+        selector: 'div > a',
+        attribute: 'href'
       },
       rel: {
-        type: 'string'
+        type: 'string',
+        source: 'attribute',
+        selector: 'div > a',
+        attribute: 'rel'
       },
       linkDestination: {
         type: 'string',
         default: 'none'
       },
       linkTarget: {
-        type: 'string'
+        type: 'string',
+        source: 'attribute',
+        selector: 'div > a',
+        attribute: 'target'
       },
-      linkNoFollow: {
-        type: 'boolean',
-        default: false
-      },
-      linkSponsored: {
-        type: 'boolean',
-        default: false
+      linkClass: {
+        type: 'string',
+        source: 'attribute',
+        selector: 'div > a',
+        attribute: 'class'
       }
     },
     edit: function edit(props) {
@@ -1170,6 +1189,7 @@
           smallSizeThumb = _props$attributes2.smallSizeThumb,
           mediumSizeThumb = _props$attributes2.mediumSizeThumb,
           linkTarget = _props$attributes2.linkTarget,
+          linkClass = _props$attributes2.linkClass,
           rel = _props$attributes2.rel;
       var source = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("source", {
         type: "image/webp",
@@ -1188,7 +1208,7 @@
         className: mediaID ? "wp-image-".concat(mediaID) : null
       }));
       var figure = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, href ? Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("a", {
-        className: "picture-plugin-class",
+        className: linkClass,
         href: href,
         target: linkTarget,
         rel: rel
