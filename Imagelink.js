@@ -12,7 +12,7 @@ const { compose } = wp.compose;
 const { Component, Fragment, useCallback, useState, useRef } = wp.element;
 const { LEFT, RIGHT, UP, DOWN, BACKSPACE, ENTER } = wp.keycodes;
 const { URLPopover } = wp.blockEditor;
-const { ToggleControl, IconButton, Toolbar, Path, SVG, NavigableMenu, MenuItem, withSpokenMessages } = wp.components;
+const { ToggleControl, TextControl, IconButton, Toolbar, Path, SVG, NavigableMenu, MenuItem, withSpokenMessages } = wp.components;
 
 /**
  * Module constants
@@ -181,6 +181,8 @@ class ImageLink extends Component {
 		this.onSetNewTab = this.onSetNewTab.bind( this );
 		this.getLinkDestinations = this.getLinkDestinations.bind( this );
 		this.onSetHref = this.onSetHref.bind( this );
+		this.onSetLinkRel = this.onSetLinkRel.bind( this );
+		this.onSetLinkClass = this.onSetLinkClass.bind( this );
 
 		this.state = {
 			isVisible: false,
@@ -230,6 +232,14 @@ class ImageLink extends Component {
 		} );
 	}
 
+	onSetLinkClass( value ) {
+		this.props.setAttributes( { linkClass: value } );
+	}
+
+	onSetLinkRel( value ) {
+		this.props.setAttributes( { rel: value } );
+	}
+
 	getLinkDestinations() {
 		return [
 			{
@@ -250,52 +260,53 @@ class ImageLink extends Component {
 	render() {
 		const {
 			attributes,
-			setAttributes,
 		} = this.props;
 
 		const {
 			href,
+			rel,
+			mediaURL,
 			linkDestination,
 			linkTarget,
-			linkNoFollow,
-			linkSponsored,
+			linkClass,
 		} = attributes;
 
 		return (
-			<Toolbar>
-				<ImageURLInputUI
-					url={ href || '' }
-					onChangeUrl={ this.onSetHref }
-					mediaLinks={ this.getLinkDestinations() }
-					linkDestination={ linkDestination }
-					advancedOptions={
-						<Fragment>
-							<ToggleControl
-								label={ __( 'Open in New Tab', 'gutenberg-examples' ) }
-								onChange={ this.onSetNewTab }
-								checked={ linkTarget === '_blank' } 
-							/>
-
-							<ToggleControl
-								label={ __( 'No follow', 'gutenberg-examples' ) }
-								onChange={ () => {
-									setAttributes( { linkNoFollow: ! linkNoFollow } );
-								} }
-								checked={ !! linkNoFollow } 
-							/>
-
-							<ToggleControl
-								label={ __( 'Sponsored', 'gutenberg-examples' ) }
-								onChange={ () => {
-									setAttributes( { linkSponsored: ! linkSponsored } );
-								} }
-								checked={ !! linkSponsored } 
-							/>
-
-						</Fragment>
-					}
-				/>
-			</Toolbar>
+			<>
+				{ mediaURL && (
+					<Toolbar>
+						<ImageURLInputUI
+							url={ href || '' }
+							onChangeUrl={ this.onSetHref }
+							mediaLinks={ this.getLinkDestinations() }
+							linkDestination={ linkDestination }
+							advancedOptions={
+								<Fragment>
+									<ToggleControl
+										label={ __( 'Open in New Tab', 'gutenberg-examples' ) }
+										onChange={ this.onSetNewTab }
+										checked={ linkTarget === '_blank' } 
+									/>
+										<TextControl
+											label={ __( 'Link CSS Class' ) }
+											value={ linkClass || '' }
+											onKeyPress={ stopPropagation }
+											onKeyDown={ stopPropagationRelevantKeys }
+											onChange={ this.onSetLinkClass }
+										/>
+										<TextControl
+											label={ __( 'Link Rel' ) }
+											value={ rel || '' }
+											onChange={ this.onSetLinkRel }
+											onKeyPress={ stopPropagation }
+											onKeyDown={ stopPropagationRelevantKeys }
+										/>
+								</Fragment>
+							}
+						/>
+					</Toolbar>
+				)}
+			</>
 		);
 	}
 }
