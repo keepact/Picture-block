@@ -815,6 +815,10 @@
       mediumSizeThumb: {
         type: 'string'
       },
+      loading: {
+        type: 'string',
+        default: 'auto'
+      },
       href: {
         type: 'string',
         source: 'attribute',
@@ -854,6 +858,7 @@
           toggleField = _props$attributes.toggleField,
           mediaSource = _props$attributes.mediaSource,
           sizes = _props$attributes.sizes,
+          loading = _props$attributes.loading,
           smallThumb = _props$attributes.smallThumb,
           mediumThumb = _props$attributes.mediumThumb,
           originalSizeThumb = _props$attributes.originalSizeThumb,
@@ -900,6 +905,13 @@
       var onChangeToggleField = function onChangeToggleField(newValue) {
         setAttributes({
           toggleField: newValue
+        });
+      };
+  
+      var onChangeToggleLazyLoad = function onChangeToggleLazyLoad(newValue) {
+        var loading = newValue ? 'lazy' : 'auto';
+        setAttributes({
+          loading: loading
         });
       };
   
@@ -1056,6 +1068,11 @@
           href: "https://www.w3.org/WAI/tutorials/images/decision-tree"
         }, __('Describe the purpose of the image')), __('Leave empty if the image is purely decorative.'))
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ToggleControl, {
+        label: __('Lazy Loading'),
+        help: __('Loads image only when user is close to seeing it'),
+        checked: loading === 'lazy',
+        onChange: onChangeToggleLazyLoad
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ToggleControl, {
         label: __('Server Scale'),
         help: __('You need to upload 3 images'),
         checked: toggleField,
@@ -1190,22 +1207,24 @@
           mediumSizeThumb = _props$attributes2.mediumSizeThumb,
           linkTarget = _props$attributes2.linkTarget,
           linkClass = _props$attributes2.linkClass,
-          rel = _props$attributes2.rel;
+          rel = _props$attributes2.rel,
+          loading = _props$attributes2.loading;
       var source = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("source", {
         type: "image/webp",
-        srcset: mediaURL
+        "data-srcset": mediaURL
       });
       var scale = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, toggleField ? Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(RichText.Content, {
         tagName: "source",
         media: "(min-width:".concat(mediaSource, ")"),
         type: "image/webp",
-        srcset: mediaURL + " ".concat(originalSizeThumb, ", ") + smallThumb + " ".concat(smallSizeThumb, ", ") + mediumThumb + " ".concat(mediumSizeThumb),
-        sizes: sizes
+        "data-srcset": mediaURL + " ".concat(originalSizeThumb, ", ") + smallThumb + " ".concat(smallSizeThumb, ", ") + mediumThumb + " ".concat(mediumSizeThumb),
+        "data-sizes": sizes
       }) : source);
       var image = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("picture", null, scale, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("img", {
-        src: mediaJPG,
+        "data-src": mediaJPG,
         alt: mediaAlt,
-        className: mediaID ? "wp-image-".concat(mediaID) : null
+        loading: loading,
+        className: mediaID ? "wp-image-".concat(mediaID, " lazyload") : null
       }));
       var figure = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, href ? Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("a", {
         className: linkClass,

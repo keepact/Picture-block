@@ -77,6 +77,10 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 		mediumSizeThumb: {
 			type: 'string',
 		},
+		loading: {
+			type: 'string',
+			default: 'auto'
+		},
 		href: {
 			type: 'string',
 			source: 'attribute',
@@ -117,6 +121,7 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				toggleField, 
 				mediaSource,
 				sizes,
+				loading,
 				smallThumb,
 				mediumThumb,
 				originalSizeThumb,
@@ -162,6 +167,12 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 
 		const onChangeToggleField = ( newValue ) => {
 			setAttributes( { toggleField: newValue } );
+		};
+
+		const onChangeToggleLazyLoad = ( newValue ) => {
+			const loading = newValue ? 'lazy' : 'auto';
+			
+			setAttributes( { loading, } );
 		};
 
 		const onChangenewAlt = ( newAlt ) => {
@@ -311,6 +322,12 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 							}
 						/>
 					)}
+					<ToggleControl
+						label={ __( 'Lazy Loading' ) }
+						help={ __( 'Loads image only when user is close to seeing it' ) }
+						checked={ loading === 'lazy' }
+						onChange={ onChangeToggleLazyLoad }
+					/>
 					<ToggleControl
 						label={ __( 'Server Scale' ) }
 						help={ __( 'You need to upload 3 images' ) }
@@ -468,11 +485,12 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 				linkTarget,
 				linkClass,
 				rel,
+				loading,
 			},
 		} = props;
 
 		const source = (
-			<source type="image/webp" srcset={ mediaURL } />
+			<source type="image/webp" data-srcset={ mediaURL } />
 		);
 
 		const scale = (
@@ -482,8 +500,8 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 						tagName="source" 
 						media={ `(min-width:${ mediaSource })` } 
 						type="image/webp" 
-						srcset={ mediaURL + ` ${originalSizeThumb}, ` + smallThumb + ` ${smallSizeThumb}, ` + mediumThumb + ` ${mediumSizeThumb}` } 
-						sizes={ sizes } 
+						data-srcset={ mediaURL + ` ${originalSizeThumb}, ` + smallThumb + ` ${smallSizeThumb}, ` + mediumThumb + ` ${mediumSizeThumb}` } 
+						data-sizes={ sizes } 
 					/>
                     ) : source 
                 }				
@@ -494,9 +512,10 @@ registerBlockType( 'gutenberg-examples/example-01-picture-card-esnext', {
 			<picture>
 				{ scale }
 				<img
-					src={ mediaJPG }
+					data-src={ mediaJPG }
 					alt={ mediaAlt }
-					className={ mediaID ? `wp-image-${ mediaID }` : null }
+					loading={ loading }
+					className={ mediaID ? `wp-image-${ mediaID } lazyload` : null }
 				/>
 			</picture>
 		);
