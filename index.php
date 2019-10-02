@@ -78,7 +78,7 @@ function gutenberg_examples_01_lazy_script() {
     ?>
         <script>
             if ('loading' in HTMLImageElement.prototype) {
-                const images = document.querySelectorAll('img[loading="lazy"]');
+                const images = document.querySelectorAll('img[loading]');
                 images.forEach(img => {
                 img.src = img.dataset.src;
                 img.dataset.srcset = img.srcset;
@@ -86,7 +86,10 @@ function gutenberg_examples_01_lazy_script() {
                 const sourceimg = document.querySelectorAll('source');
                 sourceimg.forEach(source => {
                 source.srcset = source.dataset.srcset;
-                source.sizes = source.dataset.sizes;
+                });
+                const sourcesize = document.querySelectorAll('source[data-sizes]');
+                sourcesize.forEach(sources => {
+                sources.sizes = sources.dataset.sizes;
                 });
             } else {
                 // Dynamically import the LazySizes library
