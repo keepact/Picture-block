@@ -766,7 +766,8 @@
       ButtonGroup = _wp$components.ButtonGroup,
       Toolbar = _wp$components.Toolbar,
       IconButton = _wp$components.IconButton,
-      SelectControl = _wp$components.SelectControl;
+      SelectControl = _wp$components.SelectControl,
+      TabPanel = _wp$components.TabPanel;
   registerBlockType('gutenberg-examples/example-01-picture-card-esnext', {
     title: __('Picture', 'gutenberg-examples'),
     description: __('A block with Picture tag functionality'),
@@ -1309,7 +1310,7 @@
       })), toggleField && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(PanelBody, {
         title: __('Thumbnails'),
         initialOpen: false
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+      }, !smallThumb && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "media-small-image",
         style: {
           marginTop: 10
@@ -1323,15 +1324,41 @@
           return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
             className: smallThumb ? 'image-button' : 'button button-large',
             onClick: open
-          }, !smallThumb ? __('Upload Small Image', 'gutenberg-examples') : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-            className: "block-library-image__dimensions__row"
-          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-            style: {
-              fontWeight: 700
-            }
-          }, __('Small Image')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, smallThumb)));
+          }, !smallThumb && __('Upload Small Image', 'gutenberg-examples'));
         }
-      }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+      }))), smallThumb && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-picture__dimensions__row",
+        style: {
+          marginBottom: 20,
+          position: 'relative'
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+        style: {
+          fontWeight: 700
+        }
+      }, __('Small')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-image__dimensions__row"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, smallThumb), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "picture-block-toolbar",
+        style: {
+          position: 'absolute',
+          top: -10,
+          right: 0
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+        onSelect: onSelectSmallThumb,
+        allowedTypes: "image",
+        value: mediaID,
+        render: function render(_ref7) {
+          var open = _ref7.open;
+          return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(IconButton, {
+            className: "components-toolbar__control",
+            label: __('Edit media'),
+            icon: "edit",
+            onClick: open
+          });
+        }
+      })))))), !mediumThumb && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "media-medium-image",
         style: {
           marginTop: 10
@@ -1340,47 +1367,104 @@
         onSelect: onSelectMediumThumb,
         allowedTypes: "image",
         value: mediaID,
-        render: function render(_ref7) {
-          var open = _ref7.open;
+        render: function render(_ref8) {
+          var open = _ref8.open;
           return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
             className: mediumThumb ? 'image-button' : 'button button-large',
             onClick: open
-          }, !mediumThumb ? __('Upload Medium Image', 'gutenberg-examples') : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-            className: "block-library-image__dimensions__row"
-          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-            style: {
-              fontWeight: 700
-            }
-          }, __('Medium Image')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, mediumThumb)));
+          }, !mediumThumb && __('Upload Medium Image', 'gutenberg-examples'));
         }
-      }))), sourceTag && sourceScale && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "media-small-image",
+      }))), mediumThumb && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-picture__dimensions__row",
         style: {
-          marginTop: 30
+          marginBottom: 20,
+          position: 'relative'
         }
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
         style: {
           fontWeight: 700
         }
-      }, __('Source 2')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+      }, __('Medium')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-image__dimensions__row"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, mediumThumb), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "picture-block-toolbar",
+        style: {
+          position: 'absolute',
+          top: -10,
+          right: 0
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+        onSelect: onSelectMediumThumb,
+        allowedTypes: "image",
+        value: mediaID,
+        render: function render(_ref9) {
+          var open = _ref9.open;
+          return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(IconButton, {
+            className: "components-toolbar__control",
+            label: __('Edit media'),
+            icon: "edit",
+            onClick: open
+          });
+        }
+      })))))), sourceTag && sourceScale && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        style: {
+          position: 'relative',
+          marginTop: 20
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("hr", null), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+        style: {
+          fontWeight: 700
+        }
+      }, __('Source 2')), !sourceThumb && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "media-small-image",
+        style: {
+          marginTop: 10
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
         onSelect: onSelectSourceThumb,
         allowedTypes: "image",
         value: mediaID,
-        render: function render(_ref8) {
-          var open = _ref8.open;
+        render: function render(_ref10) {
+          var open = _ref10.open;
           return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
             className: sourceThumb ? 'image-button' : 'button button-large',
             onClick: open
-          }, !sourceThumb ? __('Upload Small Image', 'gutenberg-examples') : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-            className: "block-library-image__dimensions__row"
-          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-            style: {
-              fontWeight: 700
-            }
-          }, __('Small Image')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, sourceThumb)));
+          }, !sourceThumb && __('Upload Small Image', 'gutenberg-examples'));
         }
-      }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "media-medium-image",
+      }))), sourceThumb && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-picture__dimensions__row",
+        style: {
+          marginBottom: 20,
+          position: 'relative'
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+        style: {
+          fontWeight: 700
+        }
+      }, __('Small')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-image__dimensions__row"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, sourceThumb), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "picture-block-toolbar",
+        style: {
+          position: 'absolute',
+          top: -10,
+          right: 0
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+        onSelect: onSelectSourceThumb,
+        allowedTypes: "image",
+        value: mediaID,
+        render: function render(_ref11) {
+          var open = _ref11.open;
+          return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(IconButton, {
+            className: "components-toolbar__control",
+            label: __('Edit media'),
+            icon: "edit",
+            onClick: open
+          });
+        }
+      })))))), !sourceThumb2 && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "media-small-image",
         style: {
           marginTop: 10
         }
@@ -1388,20 +1472,46 @@
         onSelect: onSelectSourceThumb2,
         allowedTypes: "image",
         value: mediaID,
-        render: function render(_ref9) {
-          var open = _ref9.open;
+        render: function render(_ref12) {
+          var open = _ref12.open;
           return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
             className: sourceThumb2 ? 'image-button' : 'button button-large',
             onClick: open
-          }, !sourceThumb2 ? __('Upload Medium Image', 'gutenberg-examples') : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-            className: "block-library-image__dimensions__row"
-          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-            style: {
-              fontWeight: 700
-            }
-          }, __('Medium Image')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, sourceThumb2)));
+          }, !sourceThumb2 && __('Upload Medium Image', 'gutenberg-examples'));
         }
-      })))), sourceTag && sourceURL && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+      }))), sourceThumb2 && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-picture__dimensions__row",
+        style: {
+          marginBottom: 20,
+          position: 'relative'
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+        style: {
+          fontWeight: 700
+        }
+      }, __('Medium')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "block-library-image__dimensions__row"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("u", null, sourceThumb2), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+        className: "picture-block-toolbar",
+        style: {
+          position: 'absolute',
+          top: -10,
+          right: 0
+        }
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUploadCheck, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaUpload, {
+        onSelect: onSelectSourceThumb2,
+        allowedTypes: "image",
+        value: mediaID,
+        render: function render(_ref13) {
+          var open = _ref13.open;
+          return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(IconButton, {
+            className: "components-toolbar__control",
+            label: __('Edit media'),
+            icon: "edit",
+            onClick: open
+          });
+        }
+      }))))))), sourceTag && sourceURL && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "components-base-control components-toggle-control",
         style: {
           marginTop: 20
@@ -1413,101 +1523,115 @@
       }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(PanelBody, {
         title: __('Image Settings'),
         initialOpen: false
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
-        label: __('Original image'),
-        help: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ExternalLink, {
-          href: "https://www.html5rocks.com/en/tutorials/responsive/picture-element/#toc-pixel-density-descriptors"
-        }, __('Combine with pixel density or width descriptors')), __('Leave blank if using pixel method.')),
-        value: originalSizeThumb,
-        onChange: onChangeSizeOriginalThumb
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "block-library-image__dimensions"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-        className: "block-library-image__dimensions__row"
-      }, __('Thumbnails Scale')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "block-library-image__dimensions__row"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
-        className: "block-library-image__dimensions__width",
-        label: __('Small'),
-        help: __('e.g., 300w or 1x'),
-        value: smallSizeThumb,
-        onChange: onChangeSizeSmallThumb
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
-        className: "block-library-image__dimensions__height",
-        label: __('Medium'),
-        help: __('e.g., 768w or 2x'),
-        value: mediumSizeThumb,
-        onChange: onChangeSizeMediumThumb
-      })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "block-library-image__dimensions__row"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-        className: "block-library-image__dimensions__row"
-      }, __('Sizes attribute')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-        className: "components-base-control__help"
-      }, __('Leave unselected if using pixel method.')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ButtonGroup, {
-        "aria-label": __('Image Size')
-      }, ['25vw', '50vw', '75vw', '100vw'].map(function (scale) {
-        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
-          key: scale,
-          isSmall: true,
-          isPrimary: size === scale,
-          "aria-pressed": size === scale,
-          onClick: function onClick() {
-            return setSizes(size === scale ? null : scale);
-          }
-        }, scale);
-      }))))), sourceTag && sourceScale && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("hr", null), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "source-settings-image"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-        className: "block-library-image__dimensions__row",
-        style: {
-          marginTop: 30,
-          fontWeight: 700
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TabPanel, {
+        className: "uagb-inspect-tabs uagb-inspect-tabs-col-2",
+        activeClass: "active-tab",
+        tabs: [{
+          name: "Source",
+          title: __("Source"),
+          className: "picture-thumb-source"
+        }, {
+          name: "Source 2",
+          title: __("Source 2"),
+          className: "picture-thumb-source"
+        }]
+      }, function (tab) {
+        var tabout;
+  
+        if ("Source" === tab.name) {
+          tabout = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
+            label: __('Original image'),
+            help: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ExternalLink, {
+              href: "https://www.html5rocks.com/en/tutorials/responsive/picture-element/#toc-pixel-density-descriptors"
+            }, __('Combine with pixel density or width descriptors')), __('Leave blank if using pixel method.')),
+            value: originalSizeThumb,
+            onChange: onChangeSizeOriginalThumb
+          }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            className: "block-library-image__dimensions__row"
+          }, __('Thumbnails Scale')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions__row"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
+            className: "block-library-image__dimensions__width",
+            label: __('Small'),
+            help: __('e.g., 300w or 1x'),
+            value: smallSizeThumb,
+            onChange: onChangeSizeSmallThumb
+          }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
+            className: "block-library-image__dimensions__height",
+            label: __('Medium'),
+            help: __('e.g., 768w or 2x'),
+            value: mediumSizeThumb,
+            onChange: onChangeSizeMediumThumb
+          })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions__row"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            className: "block-library-image__dimensions__row"
+          }, __('Sizes attribute')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            className: "components-base-control__help"
+          }, __('Leave unselected if using pixel method.')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ButtonGroup, {
+            "aria-label": __('Image Size')
+          }, ['25vw', '50vw', '75vw', '100vw'].map(function (scale) {
+            return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
+              key: scale,
+              isSmall: true,
+              isPrimary: size === scale,
+              "aria-pressed": size === scale,
+              onClick: function onClick() {
+                return setSizes(size === scale ? null : scale);
+              }
+            }, scale);
+          }))))));
+        } else {
+          tabout = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
+            label: __('Original image'),
+            help: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ExternalLink, {
+              href: "https://www.html5rocks.com/en/tutorials/responsive/picture-element/#toc-pixel-density-descriptors"
+            }, __('Combine with pixel density or width descriptors')), __('Leave blank if using pixel method.')),
+            value: originalSourceThumb,
+            onChange: onChangeSourceOriginalThumb
+          }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            className: "block-library-image__dimensions__row"
+          }, __('Thumbnails Scale')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions__row"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
+            className: "block-library-image__dimensions__width",
+            label: __('Small'),
+            help: __('e.g., 300w or 1x'),
+            value: smallSourceThumb,
+            onChange: onChangeSourceSmallThumb
+          }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
+            className: "block-library-image__dimensions__height",
+            label: __('Medium'),
+            help: __('e.g., 768w or 2x'),
+            value: mediumSourceThumb,
+            onChange: onChangeSourceMediumThumb
+          })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+            className: "block-library-image__dimensions__row"
+          }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            className: "block-library-image__dimensions__row"
+          }, __('Sizes attribute')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
+            className: "components-base-control__help"
+          }, __('Leave unselected if using pixel method.')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ButtonGroup, {
+            "aria-label": __('Image Size')
+          }, ['25vw', '50vw', '75vw', '100vw'].map(function (scalesrc) {
+            return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
+              key: scalesrc,
+              isSmall: true,
+              isPrimary: sizeSrc === scalesrc,
+              "aria-pressed": sizeSrc === scalesrc,
+              onClick: function onClick() {
+                return setSizeSrc(sizeSrc === scalesrc ? null : scalesrc);
+              }
+            }, scalesrc);
+          }))))));
         }
-      }, __('Source 2')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
-        label: __('Original image'),
-        help: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ExternalLink, {
-          href: "https://www.html5rocks.com/en/tutorials/responsive/picture-element/#toc-pixel-density-descriptors"
-        }, __('Combine with pixel density or width descriptors')), __('Leave blank if using pixel method.')),
-        value: originalSourceThumb,
-        onChange: onChangeSourceOriginalThumb
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "block-library-image__dimensions"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-        className: "block-library-image__dimensions__row"
-      }, __('Thumbnails Scale')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "block-library-image__dimensions__row"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
-        className: "block-library-image__dimensions__width",
-        label: __('Small'),
-        help: __('e.g., 300w or 1x'),
-        value: smallSourceThumb,
-        onChange: onChangeSourceSmallThumb
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(TextControl, {
-        className: "block-library-image__dimensions__height",
-        label: __('Medium'),
-        help: __('e.g., 768w or 2x'),
-        value: mediumSourceThumb,
-        onChange: onChangeSourceMediumThumb
-      })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
-        className: "block-library-image__dimensions__row"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-        className: "block-library-image__dimensions__row"
-      }, __('Sizes attribute')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", {
-        className: "components-base-control__help"
-      }, __('Leave unselected if using pixel method.')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(ButtonGroup, {
-        "aria-label": __('Image Size')
-      }, ['25vw', '50vw', '75vw', '100vw'].map(function (scalesrc) {
-        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(Button, {
-          key: scalesrc,
-          isSmall: true,
-          isPrimary: sizeSrc === scalesrc,
-          "aria-pressed": sizeSrc === scalesrc,
-          onClick: function onClick() {
-            return setSizeSrc(sizeSrc === scalesrc ? null : scalesrc);
-          }
-        }, scalesrc);
-      })))))))))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+  
+        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", null, tabout);
+      })))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
         className: "picture-image"
       }, !mediaURL && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(MediaPlaceholder, {
         labels: __('Image'),
