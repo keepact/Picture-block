@@ -36,9 +36,9 @@ function gutenberg_examples_01_esnext_register_block() {
 
 	wp_register_script(
 		'gutenberg-examples-01-esnext',
-		plugins_url( 'block.build.js', __FILE__ ),
+		plugins_url( 'build/index.js', __FILE__ ),
 		array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-compose', 'wp-keycodes', 'wp-data', 'underscore' ),
-		filemtime( plugin_dir_path( __FILE__ ) . 'block.build.js' )
+		filemtime( plugin_dir_path( __FILE__ ) . 'build/index.js' )
 	);
 
 	wp_register_style(
@@ -48,8 +48,8 @@ function gutenberg_examples_01_esnext_register_block() {
 		filemtime( plugin_dir_path( __FILE__ ) . 'style.css' )
 	);
 
-
 	register_block_type( 'gutenberg-examples/example-01-picture-card-esnext', array(
+		'style' => 'gutenberg-examples-01-esnext',
 		'editor_script' => 'gutenberg-examples-01-esnext',
 	) );
 
@@ -69,37 +69,37 @@ add_action( 'init', 'gutenberg_examples_01_esnext_register_block' );
 /**
  * Add LazySizes library support only if browser does not support loading attribute
  * Adds data-src, data-srcset, and data-sizes attributes to support the LazySizes library.
- * 
+ *
  * @param  string wp_footer hook.
  * Passes inline JavaScript
  */
 
-function gutenberg_examples_01_lazy_script() { 
-    ?>
-        <script>
-            if ('loading' in HTMLImageElement.prototype) {
-                const images = document.querySelectorAll('img[loading]');
-                images.forEach(img => {
-                img.src = img.dataset.src;
-                img.dataset.srcset = img.srcset;
-                });
-                const sourceimg = document.querySelectorAll('source');
-                sourceimg.forEach(source => {
-                source.srcset = source.dataset.srcset;
-                });
-                const sourcesize = document.querySelectorAll('source[data-sizes]');
-                sourcesize.forEach(sources => {
-                sources.sizes = sources.dataset.sizes;
-                });
-            } else {
-                // Dynamically import the LazySizes library
-                const script = document.createElement('script');
-                script.async = true;
-                script.src =
-                'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.8/lazysizes.min.js';
-                document.body.appendChild(script);
-            }
-        </script>
-    <?php	            
+function gutenberg_examples_01_lazy_script() {
+  ?>
+      <script>
+          if ('loading' in HTMLImageElement.prototype) {
+              const images = document.querySelectorAll('img[loading]');
+              images.forEach(img => {
+              img.src = img.dataset.src;
+              img.dataset.srcset = img.srcset;
+              });
+              const sourceimg = document.querySelectorAll('source');
+              sourceimg.forEach(source => {
+              source.srcset = source.dataset.srcset;
+              });
+              const sourcesize = document.querySelectorAll('source[data-sizes]');
+              sourcesize.forEach(sources => {
+              sources.sizes = sources.dataset.sizes;
+              });
+          } else {
+              // Dynamically import the LazySizes library
+              const script = document.createElement('script');
+              script.async = true;
+              script.src =
+              'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.8/lazysizes.min.js';
+              document.body.appendChild(script);
+          }
+      </script>
+  <?php
 }
 add_action( 'wp_footer', 'gutenberg_examples_01_lazy_script' );
