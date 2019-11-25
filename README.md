@@ -5,7 +5,7 @@ A block focusing on the functionality of the &lt;picture> tag and its integratio
 ## App Screen
  
  <p align="center">
-  <img alt="GitHub language count" src="https://github.com/keepact/Picture-block/blob/master/plugin-preview.png">
+  <img alt="GitHub language count" src="https://github.com/keepact/Picture-block/blob/master/plugin-screen.png">
  </p>
  
 ## What is this application about?
