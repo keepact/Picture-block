@@ -6,7 +6,7 @@ const { __ } = wp.i18n;
 
 const { registerBlockType } = wp.blocks;
 
-registerBlockType('gutenberg-examples/example-01-picture-card-esnext', {
+registerBlockType('gutenberg-examples/picture-block', {
   title: __('Picture', 'gutenberg-examples'),
   description: __('A block with Picture tag functionality'),
   icon: 'format-image',
