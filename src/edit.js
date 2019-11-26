@@ -37,7 +37,6 @@ function edit({ attributes, className, setAttributes }) {
     sourceURL,
     sourceType,
     sourceMedia,
-    sourceScale,
   } = attributes;
 
   const onSelectImage = media => {
