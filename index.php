@@ -2,10 +2,10 @@
 
 /**
  * Plugin Name: Picture Block
- * Plugin URI: https://github.com/WordPress/gutenberg-examples
+ * Plugin URI: https://github.com/keepact/picture-block
  * Description: A block with Picture tag functionality.
- * Version: 1.0.2
- * Author: the Gutenberg Team
+ * Version: 1.0.0
+ * Author: Renan Rollo
  *
  * @package gutenberg-examples
  */
