@@ -24,7 +24,7 @@
 	"dependencies": {
 		"@wordpress/block-library": "^2.9.0",
 		"classnames": "^2.2.6",
-		"lazysizes": "^5.1.1",
+		"lazysizes": "^5.2.1",
 		"lodash": "^4.17.15"
 	}
 }
